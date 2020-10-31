@@ -53,6 +53,7 @@ if [ 0 == ${PIXELBOOK} ] ; then
 	code --install-extension pkief.material-icon-theme
 	code --install-extension coenraads.bracket-pair-colorizer
 	code --install-extension formulahendry.auto-close-tag
+	code --install-extension ms-vscode-remote.vscode-remote-extensionpack
 fi
 
 git clone https://github.com/kurofuku/dotfiles
