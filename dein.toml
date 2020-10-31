@@ -1,0 +1,206 @@
+[[plugins]]
+repo = 'Shougo/deoplete.nvim'
+hook_add = 'let g:deoplete#enable_at_startup = 1'
+
+[[plugins]]
+repo = 'Shougo/vimproc.vim'
+build = 'make'
+
+#[[plugins]]
+#repo = 'vifm/neovim-vifm'
+
+#[[plugins]]
+#repo = 'airodactyl/neovim-ranger'
+#hook_add = '''
+#    nnoremap <f9> :tabe %:p:h<cr>
+#'''
+
+[[plugins]]
+repo = 'itchyny/lightline.vim'
+hook_add = '''
+    let g:lightline = {
+    \ 'colorscheme': 'jellybeans',
+    \ }
+'''
+
+[[plugins]]
+repo = 'taohexxx/lightline-buffer'
+hook_add = '''
+	" use lightline-buffer in lightline
+    let g:lightline = {
+    \ 'tabline': {
+    \   'left': [ [ 'bufferinfo' ],
+    \             [ 'separator' ],
+    \             [ 'bufferbefore', 'buffercurrent', 'bufferafter' ], ],
+    \   'right': [ [ 'close' ], ],
+    \ },
+    \ 'component_expand': {
+    \   'buffercurrent': 'lightline#buffer#buffercurrent',
+    \   'bufferbefore': 'lightline#buffer#bufferbefore',
+    \   'bufferafter': 'lightline#buffer#bufferafter',
+    \ },
+    \ 'component_type': {
+    \   'buffercurrent': 'tabsel',
+    \   'bufferbefore': 'raw',
+    \   'bufferafter': 'raw',
+    \ },
+    \ 'component_function': {
+    \   'bufferinfo': 'lightline#buffer#bufferinfo',
+    \ },
+    \ 'component': {
+    \   'separator': '',
+    \ },
+    \ }
+	
+	" remap Ctrl + arrow keys
+	nnoremap <C-Left>  :bp<CR>
+    nnoremap <C-Right> :bn<CR>
+    nnoremap <C-Down>  :ls<CR>
+
+	" lightline-buffer ui settings
+	" replace these symbols with ascii characters if your environment does not support unicode
+	" let g:lightline_buffer_logo = ' '
+	" let g:lightline_buffer_readonly_icon = ''
+	" let g:lightline_buffer_modified_icon = '✭'
+	" let g:lightline_buffer_git_icon = ' '
+	" let g:lightline_buffer_ellipsis_icon = '..'
+	" let g:lightline_buffer_expand_left_icon = '◀ '
+	" let g:lightline_buffer_expand_right_icon = ' ▶'
+	" let g:lightline_buffer_active_buffer_left_icon = ''
+	" let g:lightline_buffer_active_buffer_right_icon = ''
+	" let g:lightline_buffer_separator_icon = '  '
+
+	" enable devicons, only support utf-8
+	" require <https://github.com/ryanoasis/vim-devicons>
+	let g:lightline_buffer_enable_devicons = 1
+
+	" lightline-buffer function settings
+	let g:lightline_buffer_show_bufnr = 1
+
+	" :help filename-modifiers
+	let g:lightline_buffer_fname_mod = ':t'
+
+	" hide buffer list
+	let g:lightline_buffer_excludes = ['vimfiler']
+
+	" max file name length
+	let g:lightline_buffer_maxflen = 30
+
+	" max file extension length
+	let g:lightline_buffer_maxfextlen = 3
+
+	" min file name length
+	let g:lightline_buffer_minflen = 16
+
+	" min file extension length
+	let g:lightline_buffer_minfextlen = 3
+
+	" reserve length for other component (e.g. info, close)
+	let g:lightline_buffer_reservelen = 20
+'''
+
+#[[plugins]]
+#repo = 'mhartington/oceanic-next'
+#hook_add = '''
+#    syntax enable
+#    colorscheme OceanicNext
+#'''
+
+#[[plugins]]
+#repo = 'iCyMind/NeoSolarized'
+#hook_add = '''
+#    colorscheme NeoSolarized
+#    set background=dark
+#'''
+
+#[[plugins]]
+#repo = 'MaxSt/FlatColor'
+#hook_add = '''
+#    let g:lightline = {'colorscheme': 'flatcolor'}
+#'''
+
+#[[plugins]]
+#repo = 'joshdick/onedark.vim'
+#hook_add = '''
+#    syntax on
+#    colorscheme onedark
+#'''
+
+[[plugins]]
+repo = 'cohama/lexima.vim'
+on_i = 1
+
+[[plugins]]
+repo = 'majutsushi/tagbar'
+hook_add = '''
+    let g:tagbar_singleclick = 1
+    let g:tagbar_sort = 0
+    nnoremap <silent> <F3> :<C-u>TagbarToggle<CR>
+    :imap <silent> <F3> <C-o>:<C-u>TagbarToggle<CR>
+'''
+
+[[plugins]]
+repo = 'scrooloose/nerdtree'
+hook_add = '''
+    let g:NERDTreeWinSize=40
+    let g:NERDTreeDirArrows = 1
+    let g:NERDTreeDirArrowExpandable  = '▶'
+    let g:NERDTreeDirArrowCollapsible = '▼'
+    autocmd StdinReadPre * let s:std_in=1
+    autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
+    map <C-n> :NERDTreeToggle<CR>
+'''
+
+[[plugins]]
+repo = 'cespare/vim-toml'
+on_ft = 'toml'
+
+[[plugins]]
+repo = 'vimlab/split-term.vim'
+hook_add = '''
+    set splitright
+    set splitbelow
+'''
+
+[[plugins]]
+repo = 'vim-scripts/grep.vim'
+hook_add = '''
+    nnoremap <expr> gr ':Rgrep<CR>'
+    let Grep_Skip_Dirs = '.svn .git'  " Pattern to ignore.
+    let Grep_Default_Options = '-I'   " Do not grep in binary file.
+    let Grep_Skip_Files = '*.bak *~'  " Do not grep in backup file.
+'''
+
+[[plugins]]
+repo = 'lighttiger2505/gtags.vim'
+hook_add = '''
+    " Options
+    let g:Gtags_Auto_Map = 0
+    let g:Gtags_OpenQuickfixWindow = 1
+    " Keymap
+    " Show definetion of function cousor word on quickfix
+    nmap <silent> K :<C-u>exe("Gtags ".expand('<cword>'))<CR>
+    " Show reference of cousor word on quickfix
+    nmap <silent> R :<C-u>exe("Gtags -r ".expand('<cword>'))<CR>
+'''
+
+[[plugins]]
+repo = 'eparreno/vim-l9'
+
+[[plugins]]
+repo = 'vim-scripts/FuzzyFinder'
+hook_add = '''
+        nnoremap <unique> <silent> <space>fb :FufBuffer!<CR>
+        nnoremap <unique> <silent> <space>ff :FufFile **/<CR>
+        nnoremap <unique> <silent> <space>fm :FufMruFile!<CR>
+        nnoremap <unique> <silent> <Space>fc :FufRenewCache<CR>
+        autocmd FileType fuf nmap <C-c> <ESC>
+        let g:fuf_patternSeparator = ' '
+        let g:fuf_modesDisable = ['mrucmd']
+        let g:fuf_mrufile_exclude = '\v\.DS_Store|\.git|\.swp|\.svn'
+        let g:fuf_mrufile_maxItem = 100
+        let g:fuf_enumeratingLimit = 20
+        let g:fuf_file_exclude = '\v\.DS_Store|\.git|\.swp|\.svn'
+        let g:fuf_keyOpen = '<Tab>'
+        let g:fuf_keyOpenTabpage = '<CR>'
+'''
