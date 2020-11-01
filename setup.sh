@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 PIXELBOOK=0
 RASPBERRYPI=0
