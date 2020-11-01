@@ -37,23 +37,25 @@ if [ 1 == ${PIXELBOOK} ] ; then
 	done
 	sudo gdebi -o APT::Get::force-yes=true -o APT::Get::Assume-Yes=true -n /tmp/code.deb
 	rm /tmp/code.deb
-
-	code --install-extension ms-vscode.cpptools
-	code --install-extension hars.cppsnippets
-	code --install-extension austin.code-gnu-global
-	code --install-extension oderwat.indent-rainbow
-	code --install-extension SolarLiner.linux-themes
-	code --install-extension alefragnani.project-manager
-	code --install-extension jtanx.ctagsx
-	code --install-extension donjayamanne.python-extension-pack
-	code --install-extension tht13.python
-	code --install-extension MS-CEINTL.vscode-language-pack-ja
-	code --install-extension gerane.theme-dracula
-	code --install-extension gerane.theme-dark-dracula
-	code --install-extension pkief.material-icon-theme
-	code --install-extension coenraads.bracket-pair-colorizer
-	code --install-extension formulahendry.auto-close-tag
-	code --install-extension ms-vscode-remote.vscode-remote-extensionpack
+	
+	VSCODE_EXTENSIONS="	ms-vscode.cpptools \
+				hars.cppsnippets \
+				austin.code-gnu-global \
+				oderwat.indent-rainbow \
+				SolarLiner.linux-themes \
+				alefragnani.project-manager \
+				jtanx.ctagsx \
+				donjayamanne.python-extension-pack \
+				tht13.python \
+				gerane.theme-dracula \
+				pkief.material-icon-theme \
+				coenraads.bracket-pair-colorizer \
+				formulahendry.auto-close-tag \
+				ms-vscode-remote.vscode-remote-extensionpack \
+				"
+	for extension in ${VSCODE_EXTENSIONS[@]}; do
+		code --install-extension ${extension}
+	done
 fi
 
 git clone https://github.com/kurofuku/dotfiles
