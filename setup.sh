@@ -25,7 +25,7 @@ sudo pip3 install neovim
 sudo pip3 install --upgrade neovim
 sudo pip3 install Pygments
 
-if [ 0 == ${PIXELBOOK} ] ; then
+if [ 1 == ${PIXELBOOK} ] ; then
 	sudo apt-get -y install gdebi
 
 	# install code
