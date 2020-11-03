@@ -12,6 +12,9 @@ if [ "pixelbook" == $1 ]; then
 	PIXELBOOK=1
 elif  [ "raspi" == $1 ]; then
 	RASPBERRYPI=1
+else
+	echo "You need to specify pixelbook or raspi" 1>&2
+	exit 1
 fi
 # update/upgrade
 sudo apt-get -y update
