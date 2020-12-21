@@ -1,19 +1,19 @@
 #!/bin/bash
 
-PIXELBOOK=0
+CHROMEBOOK=0
 RASPBERRYPI=0
 
 if [ $# -ne 1 ]; then
-	echo "You need to specify pixelbook or raspi" 1>&2
+	echo "You need to specify chromebook or raspi" 1>&2
 	exit 1
 fi
 
-if [ "pixelbook" == $1 ]; then
-	PIXELBOOK=1
+if [ "chromebook" == $1 ]; then
+	CHROMEBOOK=1
 elif  [ "raspi" == $1 ]; then
 	RASPBERRYPI=1
 else
-	echo "You need to specify pixelbook or raspi" 1>&2
+	echo "You need to specify chromebook or raspi" 1>&2
 	exit 1
 fi
 # update/upgrade
@@ -28,7 +28,7 @@ sudo pip3 install neovim
 sudo pip3 install --upgrade neovim
 sudo pip3 install Pygments
 
-if [ 1 == ${PIXELBOOK} ] ; then
+if [ 1 == ${CHROMEBOOK} ] ; then
 	sudo apt-get -y install gdebi
 
 	# install code
