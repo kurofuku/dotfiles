@@ -79,7 +79,7 @@ if [ 1 == ${RASPBERRYPI} ] ; then
 	cmake ..
 	cmake --build .
 	ctest
-	sudo cmake --build . --target install
+	sudo ${HOME}/.local/bin/cmake --build . --target install
 	sed -e 's/Example/#Example/' /usr/local/etc/clamav.conf.sample | \
 		sed -e 's/#FixStaleSocket yes/FixStaleSocket yes/' | \
 		sed -e 's/#TCPSocket 3310/TCPSocket 3310/' | \
