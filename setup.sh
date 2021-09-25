@@ -61,13 +61,41 @@ if [ 1 == ${CHROMEBOOK} ] ; then
 	done
 fi
 
+if [ 1 == ${RASPBERRYPI} ] ; then
+	# Install clamav with my customization
+	cd ${HOME}
+	sudo apt-get -y install	gcc make pkg-config python3 python3-pip python3-pytest valgrind \
+				check libbz2-dev libcurl4-openssl-dev libjson-c-dev libmilter-dev \
+				libncurses5-dev libpcre2-dev libssl-dev libxml2-dev zlib1g-dev
+	python3 -m pip install --user cmake
+	sudo groupadd clamav
+	sudo useradd -g clamav -s /bin/false -c "Clam Antivirus" clamav
+	wget https://github.com/Cisco-Talos/clamav/archive/refs/tags/clamav-0.104.0.tar.gz
+	tar zxf clamav-0.104.0.tar.gz
+	cd clamav-clamav-0.104.0
+	mkdir build && cd build
+	cmake ..
+	cmake --build .
+	ctest
+	sudo cmake --build . --target install
+	sed -e 's/Example/#Example/' /usr/local/etc/clamav.conf.sample | \
+		sed -e 's/#FixStaleSocket yes/FixStaleSocket yes/' | \
+		sed -e 's/#TCPSocket 3310/TCPSocket 3310/' | \
+		sed -e 's/#TCPAddr localhost/TCPAddr localhost/' | sudo tee /usr/local/etc/clamav.conf > /dev/null
+	sed -e 's/Example/#Example/' /usr/local/etc/freshclam.conf.sample | sudo tee /usr/local/etc/freshclam.conf > /dev/null
+	cd ${HOME}
+	rm -f clamav-0.104.0.tar.gz
+	rm -rf clamav-clamav-0.104.0
+fi
+
+cd ${HOME}
 git clone https://github.com/kurofuku/dotfiles
-cp dotfiles/.tmux.conf .
-cp dotfiles/.globalrc .
-mkdir -p .config/nvim
-cp dotfiles/init.vim .config/nvim
-cp dotfiles/dein.toml .config/nvim
-cp dotfiles/dein_lazy.toml .config/nvim
+cp dotfiles/.tmux.conf ${HOME}
+cp dotfiles/.globalrc ${HOME}
+mkdir -p ${HOME}/.config/nvim
+cp dotfiles/init.vim ${HOME}/.config/nvim
+cp dotfiles/dein.toml ${HOME}/.config/nvim
+cp dotfiles/dein_lazy.toml ${HOME}/.config/nvim
 rm -rf dotfiles
 
 sync
