@@ -72,7 +72,8 @@ if [ 1 == ${RASPBERRYPI} ] ; then
 	sudo useradd -g clamav -s /bin/false -c "Clam Antivirus" clamav
 	wget https://github.com/Cisco-Talos/clamav/archive/refs/tags/clamav-0.104.0.tar.gz
 	tar zxf clamav-0.104.0.tar.gz
-	patch -p0 <( wget -O - https://raw.githubusercontent.com/kurofuku/dotfiles/master/change_fanotify_mask.diff )
+	wget -O - https://raw.githubusercontent.com/kurofuku/dotfiles/master/change_fanotify_mask.diff
+	patch -p0 < change_fanotify_mask.diff
 	cd clamav-clamav-0.104.0
 	mkdir build && cd build
 	cmake ..
@@ -87,6 +88,7 @@ if [ 1 == ${RASPBERRYPI} ] ; then
 	cd ${HOME}
 	rm -f clamav-0.104.0.tar.gz
 	rm -rf clamav-clamav-0.104.0
+	rm -rf change_fanotify_mask.diff
 fi
 
 cd ${HOME}
