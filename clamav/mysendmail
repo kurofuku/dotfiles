@@ -1,0 +1,9 @@
+#!/bin/bash
+MAIL_ADDRESS=kurofuku98@hotmail.com
+{
+	/bin/echo From: clamav@linuxfun.org
+	/bin/echo To: ${MAIL_ADDRESS}
+	/bin/echo Subject: Virus detected!
+	/bin/echo
+	/bin/echo ${CLAM_VIRUSEVENT_VIRUSNAME} is found in ${CLAM_VIRUSEVENT_FILENAME}
+} | /usr/sbin/sendmail -t

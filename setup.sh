@@ -85,15 +85,18 @@ if [ 1 == ${RASPBERRYPI} ] ; then
 		sed -e 's/^#TCPSocket 3310/TCPSocket 3310/' | \
 		sed -e 's/^#TCPAddr localhost/TCPAddr localhost/' | sudo tee /usr/local/etc/clamd.conf > /dev/null
 	sed -e 's/^Example/#Example/' /usr/local/etc/freshclam.conf.sample | sudo tee /usr/local/etc/freshclam.conf > /dev/null
-	# @TODO Install service related files.
 	wget https://raw.githubusercontent.com/kurofuku/dotfiles/master/clamav/freshclam.service
 	wget https://raw.githubusercontent.com/kurofuku/dotfiles/master/clamav/clamd.service
 	wget https://raw.githubusercontent.com/kurofuku/dotfiles/master/clamav/clamonacc.service
 	wget https://raw.githubusercontent.com/kurofuku/dotfiles/master/clamav/start_clamonacc.sh
+	wget https://raw.githubusercontent.com/kurofuku/dotfiles/master/clamav/mysendmail
 	sudo cp freshclam.service /etc/systemd/system/
 	sudo cp clamd.service /etc/systemd/system/
 	sudo cp clamonacc.service /etc/systemd/system/
 	sudo cp start_clamonacc.sh /usr/local/bin/
+	sudo cp mysendmail /usr/local/bin/
+	echo "VirusEvent /usr/local/bin/mysendmail" >> /usr/local/etc/clamd.conf
+	echo "OnAccessIncludePath ${HOME}" >> /usr/local/etc/clamd.conf
 	sudo service freshclam start
 	sudo service clamd start
 	sudo service clamonacc start
