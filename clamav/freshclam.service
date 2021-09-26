@@ -1,0 +1,5 @@
+[Unit]
+Description=Clamav
+[Service]
+ExecStart=/usr/local/bin/freshclam --daemon --check=1 --daemon-notify=/usr/local/etc/clamd.conf
+RemainAfterExit=yes

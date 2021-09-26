@@ -72,7 +72,7 @@ if [ 1 == ${RASPBERRYPI} ] ; then
 	sudo useradd -g clamav -s /bin/false -c "Clam Antivirus" clamav
 	wget https://github.com/Cisco-Talos/clamav/archive/refs/tags/clamav-0.104.0.tar.gz
 	tar zxf clamav-0.104.0.tar.gz
-	wget https://raw.githubusercontent.com/kurofuku/dotfiles/master/change_fanotify_mask.diff
+	wget https://raw.githubusercontent.com/kurofuku/dotfiles/master/clamav/change_fanotify_mask.diff
 	patch -p0 < change_fanotify_mask.diff
 	cd clamav-clamav-0.104.0
 	mkdir build && cd build
@@ -85,6 +85,16 @@ if [ 1 == ${RASPBERRYPI} ] ; then
 		sed -e 's/#TCPSocket 3310/TCPSocket 3310/' | \
 		sed -e 's/#TCPAddr localhost/TCPAddr localhost/' | sudo tee /usr/local/etc/clamd.conf > /dev/null
 	sed -e 's/Example/#Example/' /usr/local/etc/freshclam.conf.sample | sudo tee /usr/local/etc/freshclam.conf > /dev/null
+	# @TODO Install service related files.
+	wget https://raw.githubusercontent.com/kurofuku/dotfiles/master/clamav/freshclam.service
+	wget https://raw.githubusercontent.com/kurofuku/dotfiles/master/clamav/clamd.service
+	wget https://raw.githubusercontent.com/kurofuku/dotfiles/master/clamav/clamonacc.service
+	sudo cp freshclam.service /etc/systemd/system/
+	sudo cp clamd.service /etc/systemd/system/
+	sudo cp clamonacc.service /etc/systemd/system/
+	sudo service freshclam start
+	sudo service clamd start
+	sudo service clamonacc start
 	cd ${HOME}
 	rm -f clamav-0.104.0.tar.gz
 	rm -rf clamav-clamav-0.104.0

@@ -1,0 +1,7 @@
+[Unit]
+Description=Clamav on access scan service
+[Service]
+After=clamd
+ExecStart=/usr/local/sbin/clamonacc --fdpass --move=/opt/clamav/quarantine
+ExecStop=/usr/bin/killall -SIGKILL clamonacc
+RemainAfterExit=yes

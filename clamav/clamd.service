@@ -1,0 +1,6 @@
+[Unit]
+Description=Clamav
+[Service]
+After=freshclam
+ExecStart=/usr/local/sbin/clamd
+RemainAfterExit=yes
