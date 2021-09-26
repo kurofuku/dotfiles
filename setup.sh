@@ -76,9 +76,9 @@ if [ 1 == ${RASPBERRYPI} ] ; then
 	patch -p0 < change_fanotify_mask.diff
 	cd clamav-clamav-0.104.0
 	mkdir build && cd build
-	cmake ..
-	cmake --build .
-	ctest
+	${HOME}/.local/bin/cmake ..
+	${HOME}/.local/bin/cmake --build .
+	${HOME}/.local/bin/ctest
 	sudo ${HOME}/.local/bin/cmake --build . --target install
 	sed -e 's/Example/#Example/' /usr/local/etc/clamav.conf.sample | \
 		sed -e 's/#FixStaleSocket yes/FixStaleSocket yes/' | \
