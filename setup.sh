@@ -80,11 +80,11 @@ if [ 1 == ${RASPBERRYPI} ] ; then
 	cmake --build .
 	ctest
 	sudo cmake --build . --target install
-	sed -e 's/Example/#Example/' /usr/local/etc/clamd.conf.sample | \
-		sed -e 's/#FixStaleSocket yes/FixStaleSocket yes/' | \
-		sed -e 's/#TCPSocket 3310/TCPSocket 3310/' | \
-		sed -e 's/#TCPAddr localhost/TCPAddr localhost/' | sudo tee /usr/local/etc/clamd.conf > /dev/null
-	sed -e 's/Example/#Example/' /usr/local/etc/freshclam.conf.sample | sudo tee /usr/local/etc/freshclam.conf > /dev/null
+	sed -e 's/^Example/#Example/' /usr/local/etc/clamd.conf.sample | \
+		sed -e 's/^#FixStaleSocket yes/FixStaleSocket yes/' | \
+		sed -e 's/^#TCPSocket 3310/TCPSocket 3310/' | \
+		sed -e 's/^#TCPAddr localhost/TCPAddr localhost/' | sudo tee /usr/local/etc/clamd.conf > /dev/null
+	sed -e 's/^Example/#Example/' /usr/local/etc/freshclam.conf.sample | sudo tee /usr/local/etc/freshclam.conf > /dev/null
 	# @TODO Install service related files.
 	wget https://raw.githubusercontent.com/kurofuku/dotfiles/master/clamav/freshclam.service
 	wget https://raw.githubusercontent.com/kurofuku/dotfiles/master/clamav/clamd.service
