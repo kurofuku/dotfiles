@@ -89,9 +89,11 @@ if [ 1 == ${RASPBERRYPI} ] ; then
 	wget https://raw.githubusercontent.com/kurofuku/dotfiles/master/clamav/freshclam.service
 	wget https://raw.githubusercontent.com/kurofuku/dotfiles/master/clamav/clamd.service
 	wget https://raw.githubusercontent.com/kurofuku/dotfiles/master/clamav/clamonacc.service
+	wget https://raw.githubusercontent.com/kurofuku/dotfiles/master/clamav/start_clamonacc.sh
 	sudo cp freshclam.service /etc/systemd/system/
 	sudo cp clamd.service /etc/systemd/system/
 	sudo cp clamonacc.service /etc/systemd/system/
+	sudo cp start_clamonacc.sh /usr/local/bin/
 	sudo service freshclam start
 	sudo service clamd start
 	sudo service clamonacc start
