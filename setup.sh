@@ -67,7 +67,7 @@ if [ 1 == ${RASPBERRYPI} ] ; then
 	sudo apt-get -y install	gcc make pkg-config python3 python3-pip python3-pytest valgrind \
 				check libbz2-dev libcurl4-openssl-dev libjson-c-dev libmilter-dev \
 				libncurses5-dev libpcre2-dev libssl-dev libxml2-dev zlib1g-dev
-	python3 -m pip install --user cmake
+	sudo python3 -m pip install cmake
 	sudo groupadd clamav
 	sudo useradd -g clamav -s /bin/false -c "Clam Antivirus" clamav
 	wget https://github.com/Cisco-Talos/clamav/archive/refs/tags/clamav-0.104.0.tar.gz
@@ -76,14 +76,14 @@ if [ 1 == ${RASPBERRYPI} ] ; then
 	patch -p0 < change_fanotify_mask.diff
 	cd clamav-clamav-0.104.0
 	mkdir build && cd build
-	${HOME}/.local/bin/cmake ..
-	${HOME}/.local/bin/cmake --build .
-	${HOME}/.local/bin/ctest
-	sudo ${HOME}/.local/bin/cmake --build . --target install
-	sed -e 's/Example/#Example/' /usr/local/etc/clamav.conf.sample | \
+	cmake ..
+	cmake --build .
+	ctest
+	sudo cmake --build . --target install
+	sed -e 's/Example/#Example/' /usr/local/etc/clamd.conf.sample | \
 		sed -e 's/#FixStaleSocket yes/FixStaleSocket yes/' | \
 		sed -e 's/#TCPSocket 3310/TCPSocket 3310/' | \
-		sed -e 's/#TCPAddr localhost/TCPAddr localhost/' | sudo tee /usr/local/etc/clamav.conf > /dev/null
+		sed -e 's/#TCPAddr localhost/TCPAddr localhost/' | sudo tee /usr/local/etc/clamd.conf > /dev/null
 	sed -e 's/Example/#Example/' /usr/local/etc/freshclam.conf.sample | sudo tee /usr/local/etc/freshclam.conf > /dev/null
 	cd ${HOME}
 	rm -f clamav-0.104.0.tar.gz
