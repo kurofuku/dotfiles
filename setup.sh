@@ -64,10 +64,9 @@ fi
 if [ 1 == ${RASPBERRYPI} ] ; then
 	# Install clamav with my customization
 	cd ${HOME}
-	sudo apt-get -y install	gcc make pkg-config python3 python3-pip python3-pytest valgrind \
+	sudo apt-get -y install	cmake gcc make pkg-config python3 python3-pip python3-pytest valgrind \
 				check libbz2-dev libcurl4-openssl-dev libjson-c-dev libmilter-dev \
 				libncurses5-dev libpcre2-dev libssl-dev libxml2-dev zlib1g-dev
-	sudo python3 -m pip install cmake
 	sudo groupadd clamav
 	sudo useradd -g clamav -s /bin/false -c "Clam Antivirus" clamav
 	wget https://github.com/Cisco-Talos/clamav/archive/refs/tags/clamav-0.104.0.tar.gz
@@ -94,9 +93,11 @@ if [ 1 == ${RASPBERRYPI} ] ; then
 	sudo cp clamd.service /etc/systemd/system/
 	sudo cp clamonacc.service /etc/systemd/system/
 	sudo cp start_clamonacc.sh /usr/local/bin/
+	sudo chmod +x /usr/local/bin/start_clamonacc.sh
 	sudo cp mysendmail /usr/local/bin/
-	echo "VirusEvent /usr/local/bin/mysendmail" >> /usr/local/etc/clamd.conf
-	echo "OnAccessIncludePath ${HOME}" >> /usr/local/etc/clamd.conf
+	sudo chmod +x /usr/local/bin/mysendmail
+	echo "VirusEvent /usr/local/bin/mysendmail" | sudo tee -a /usr/local/etc/clamd.conf > /dev/null
+	echo "OnAccessIncludePath ${HOME}" | sudo tee -a /usr/local/etc/clamd.conf > /dev/null
 	sudo service freshclam start
 	sudo service clamd start
 	sudo service clamonacc start
