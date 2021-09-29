@@ -72,7 +72,9 @@ if [ 1 == ${RASPBERRYPI} ] ; then
 	wget https://github.com/Cisco-Talos/clamav/archive/refs/tags/clamav-0.104.0.tar.gz
 	tar zxf clamav-0.104.0.tar.gz
 	wget https://raw.githubusercontent.com/kurofuku/dotfiles/master/clamav/change_fanotify_mask.diff
+	wget https://raw.githubusercontent.com/kurofuku/dotfiles/master/clamav/add_OnAccessVirusEvent_functionalty.diff
 	patch -p0 < change_fanotify_mask.diff
+	patch -p0 < add_OnAccessVirusEvent_functionalty.diff
 	cd clamav-clamav-0.104.0
 	mkdir build && cd build
 	cmake ..
@@ -96,7 +98,7 @@ if [ 1 == ${RASPBERRYPI} ] ; then
 	sudo chmod +x /usr/local/bin/start_clamonacc.sh
 	sudo cp mysendmail /usr/local/bin/
 	sudo chmod +x /usr/local/bin/mysendmail
-	echo "VirusEvent /usr/local/bin/mysendmail" | sudo tee -a /usr/local/etc/clamd.conf > /dev/null
+	echo "OnAccessVirusEvent /usr/local/bin/mysendmail" | sudo tee -a /usr/local/etc/clamd.conf > /dev/null
 	echo "OnAccessIncludePath ${HOME}" | sudo tee -a /usr/local/etc/clamd.conf > /dev/null
 	sudo service freshclam start
 	sudo service clamd start
@@ -104,7 +106,7 @@ if [ 1 == ${RASPBERRYPI} ] ; then
 	cd ${HOME}
 	rm -f clamav-0.104.0.tar.gz
 	rm -rf clamav-clamav-0.104.0
-	rm -rf change_fanotify_mask.diff
+	rm -rf *.diff
 fi
 
 cd ${HOME}
