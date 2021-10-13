@@ -66,7 +66,8 @@ if [ 1 == ${RASPBERRYPI} ] ; then
 	cd ${HOME}
 	sudo apt-get -y install	cmake gcc make pkg-config python3 python3-pip python3-pytest valgrind \
 				check libbz2-dev libcurl4-openssl-dev libjson-c-dev libmilter-dev \
-				libncurses5-dev libpcre2-dev libssl-dev libxml2-dev zlib1g-dev
+				libncurses5-dev libpcre2-dev libssl-dev libxml2-dev zlib1g-dev \
+				netcat
 	sudo groupadd clamav
 	sudo useradd -g clamav -s /bin/false -c "Clam Antivirus" clamav
 	wget https://github.com/Cisco-Talos/clamav/archive/refs/tags/clamav-0.104.0.tar.gz
