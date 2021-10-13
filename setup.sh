@@ -101,6 +101,7 @@ if [ 1 == ${RASPBERRYPI} ] ; then
 	sudo chmod +x /usr/local/bin/mysendmail
 	echo "OnAccessVirusEvent /usr/local/bin/mysendmail" | sudo tee -a /usr/local/etc/clamd.conf > /dev/null
 	echo "OnAccessIncludePath ${HOME}" | sudo tee -a /usr/local/etc/clamd.conf > /dev/null
+	echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
 	sudo service freshclam start
 	sudo service clamd start
 	sudo service clamonacc start
