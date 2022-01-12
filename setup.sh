@@ -21,7 +21,7 @@ sudo apt-get -y update
 sudo apt-get -y upgrade
 
 # install utility
-sudo apt-get -y install neovim git tmux software-properties-common python-pip python3 python3 python3-pip
+sudo apt-get -y install neovim git tmux software-properties-common python3 python3-pip
 sudo pip install --upgrade pip
 sudo pip3 install --upgrade pip
 sudo pip3 install neovim
