@@ -4,3 +4,5 @@ Description=Clamav
 After=freshclam
 ExecStart=/usr/local/sbin/clamd
 RemainAfterExit=yes
+[Install]
+WantedBy=multi-user.target
