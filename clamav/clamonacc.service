@@ -5,3 +5,5 @@ After=clamd
 ExecStart=/usr/local/bin/start_clamonacc.sh
 ExecStop=/usr/bin/killall -SIGKILL clamonacc
 RemainAfterExit=yes
+[Install]
+WantedBy=multi-user.target
