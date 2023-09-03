@@ -1,7 +1,8 @@
-diff -ruN clamav-clamav-0.104.0-org/clamonacc/client/client.c clamav-clamav-0.104.0/clamonacc/client/client.c
---- clamav-clamav-0.104.0-org/clamonacc/client/client.c	2021-08-28 07:24:15.000000000 +0900
-+++ clamav-clamav-0.104.0/clamonacc/client/client.c	2021-09-29 15:14:46.471579054 +0900
-@@ -548,7 +548,7 @@
+diff --git a/clamonacc/client/client.c b/clamonacc/client/client.c
+index 4e627944a..41380c50d 100644
+--- a/clamonacc/client/client.c
++++ b/clamonacc/client/client.c
+@@ -529,7 +529,7 @@ int onas_get_clamd_version(struct onas_context **ctx)
   * @param err       return variable passed to the daemon protocol interface indicating how many things went wrong in the course of scanning
   * @param ret_code  return variable passed to the daemon protocol interface indicating last known issue or success
   */
@@ -10,7 +11,7 @@ diff -ruN clamav-clamav-0.104.0-org/clamonacc/client/client.c clamav-clamav-0.10
  {
      CURL *curl        = NULL;
      CURLcode curlcode = CURLE_OK;
-@@ -583,7 +583,7 @@
+@@ -564,7 +564,7 @@ int onas_client_scan(const char *tcpaddr, int64_t portnum, int32_t scantype, uin
          disconnected = false;
      }
  
@@ -18,12 +19,13 @@ diff -ruN clamav-clamav-0.104.0-org/clamonacc/client/client.c clamav-clamav-0.10
 +    if ((ret = onas_dsresult(curl, scantype, maxstream, fname, fd, timeout, ctx, &ret, err, ret_code)) >= 0) {
          *infected = ret;
      } else {
-         logg("*ClamClient: connection could not be established ... return code %d\n", *ret_code);
-diff -ruN clamav-clamav-0.104.0-org/clamonacc/client/client.h clamav-clamav-0.104.0/clamonacc/client/client.h
---- clamav-clamav-0.104.0-org/clamonacc/client/client.h	2021-08-28 07:24:15.000000000 +0900
-+++ clamav-clamav-0.104.0/clamonacc/client/client.h	2021-09-29 15:14:46.471579054 +0900
-@@ -40,7 +40,7 @@
- };
+         logg(LOGG_DEBUG, "ClamClient: connection could not be established ... return code %d\n", *ret_code);
+diff --git a/clamonacc/client/client.h b/clamonacc/client/client.h
+index bd4668f56..4593ffa5a 100644
+--- a/clamonacc/client/client.h
++++ b/clamonacc/client/client.h
+@@ -31,7 +31,7 @@
+ #define ONAS_DEFAULT_PING_ATTEMPTS 31
  
  void onas_print_server_version(struct onas_context **ctx);
 -int onas_client_scan(const char *tcpaddr, int64_t portnum, int32_t scantype, uint64_t maxstream, const char *fname, int fd, int64_t timeout, STATBUF sb, int *infected, int *err, cl_error_t *ret_code);
@@ -31,10 +33,11 @@ diff -ruN clamav-clamav-0.104.0-org/clamonacc/client/client.h clamav-clamav-0.10
  CURLcode onas_curl_init(CURL **curl, const char *ipaddr, int64_t port, int64_t timeout);
  int onas_get_clamd_version(struct onas_context **ctx);
  cl_error_t onas_setup_client(struct onas_context **ctx);
-diff -ruN clamav-clamav-0.104.0-org/clamonacc/client/protocol.c clamav-clamav-0.104.0/clamonacc/client/protocol.c
---- clamav-clamav-0.104.0-org/clamonacc/client/protocol.c	2021-08-28 07:24:15.000000000 +0900
-+++ clamav-clamav-0.104.0/clamonacc/client/protocol.c	2021-09-29 15:14:32.721709293 +0900
-@@ -228,11 +228,111 @@
+diff --git a/clamonacc/client/protocol.c b/clamonacc/client/protocol.c
+index b307007cb..3c0b314ad 100644
+--- a/clamonacc/client/protocol.c
++++ b/clamonacc/client/protocol.c
+@@ -228,11 +228,111 @@ fd_out:
  }
  #endif
  
@@ -60,7 +63,7 @@ diff -ruN clamav-clamav-0.104.0-org/clamonacc/client/protocol.c clamav-clamav-0.
 +    char *env[4];
 +
 +    if (!(opt = optget(opts, "OnAccessVirusEvent")) || !opt->enabled) {
-+        logg("*OnAccessVirusEvent not found\n");
++        logg(LOGG_WARNING, "*OnAccessVirusEvent not found\n");
 +        return;
 +    }
 +
@@ -128,7 +131,7 @@ diff -ruN clamav-clamav-0.104.0-org/clamonacc/client/protocol.c clamav-clamav-0.
 +        while (waitpid(pid, NULL, 0) == -1 && errno == EINTR) continue;
 +    } else {
 +        pthread_mutex_unlock(&virusaction_lock);
-+        logg("!VirusEvent: fork failed.\n");
++        logg(LOGG_ERROR, "!VirusEvent: fork failed.\n");
 +    }
 +    if (path)  
 +        xfree(env[0]);
@@ -147,17 +150,18 @@ diff -ruN clamav-clamav-0.104.0-org/clamonacc/client/protocol.c clamav-clamav-0.
  {
      int infected = 0, len = 0, beenthere = 0;
      char *bol, *eol;
-@@ -370,6 +470,7 @@
-                         logg("~%s%s FOUND\n", filename, colon);
+@@ -370,6 +470,7 @@ int onas_dsresult(CURL *curl, int scantype, uint64_t maxstream, const char *file
+                         logg(LOGG_INFO, "%s%s FOUND\n", filename, colon);
                          if (action) {
                              action(filename);
 +                            virusaction(filename, colon, ctx->clamdopts);
                          }
                      } else {
-                         logg("~%s FOUND\n", bol);
-diff -ruN clamav-clamav-0.104.0-org/clamonacc/client/protocol.h clamav-clamav-0.104.0/clamonacc/client/protocol.h
---- clamav-clamav-0.104.0-org/clamonacc/client/protocol.h	2021-08-28 07:24:15.000000000 +0900
-+++ clamav-clamav-0.104.0/clamonacc/client/protocol.h	2021-09-29 15:14:32.721709293 +0900
+                         logg(LOGG_INFO, "%s FOUND\n", bol);
+diff --git a/clamonacc/client/protocol.h b/clamonacc/client/protocol.h
+index 82d596466..92378f07a 100644
+--- a/clamonacc/client/protocol.h
++++ b/clamonacc/client/protocol.h
 @@ -27,5 +27,5 @@
  #include "misc.h"
  #include "../clamonacc.h"
@@ -165,10 +169,31 @@ diff -ruN clamav-clamav-0.104.0-org/clamonacc/client/protocol.h clamav-clamav-0.
 -int onas_dsresult(CURL *curl, int scantype, uint64_t maxstream, const char *filename, int fd, int64_t timeout, int *printok, int *errors, cl_error_t *ret_code);
 +int onas_dsresult(CURL *curl, int scantype, uint64_t maxstream, const char *filename, int fd, int64_t timeout, struct onas_context *ctx, int *printok, int *errors, cl_error_t *ret_code);
  #endif
-diff -ruN clamav-clamav-0.104.0-org/clamonacc/scan/onas_queue.c clamav-clamav-0.104.0/clamonacc/scan/onas_queue.c
---- clamav-clamav-0.104.0-org/clamonacc/scan/onas_queue.c	2021-08-28 07:24:15.000000000 +0900
-+++ clamav-clamav-0.104.0/clamonacc/scan/onas_queue.c	2021-09-29 15:13:12.132478665 +0900
-@@ -45,7 +45,7 @@
+diff --git a/clamonacc/fanotif/fanotif.c b/clamonacc/fanotif/fanotif.c
+index d57d7212c..530c687d3 100644
+--- a/clamonacc/fanotif/fanotif.c
++++ b/clamonacc/fanotif/fanotif.c
+@@ -84,13 +84,13 @@ cl_error_t onas_setup_fanotif(struct onas_context **ctx)
+ 
+     if (optget((*ctx)->clamdopts, "OnAccessPrevention")->enabled && !optget((*ctx)->clamdopts, "OnAccessMountPath")->enabled) {
+         logg(LOGG_DEBUG, "ClamFanotif: kernel-level blocking feature enabled ... preventing malicious files access attempts\n");
+-        (*ctx)->fan_mask |= FAN_ACCESS_PERM | FAN_OPEN_PERM;
++        (*ctx)->fan_mask |= FAN_MODIFY | FAN_CLOSE | FAN_OPEN_EXEC_PERM;
+     } else {
+         logg(LOGG_DEBUG, "ClamFanotif: kernel-level blocking feature disabled ...\n");
+         if (optget((*ctx)->clamdopts, "OnAccessPrevention")->enabled && optget((*ctx)->clamdopts, "OnAccessMountPath")->enabled) {
+             logg(LOGG_DEBUG, "ClamFanotif: feature not available when watching mounts ... \n");
+         }
+-        (*ctx)->fan_mask |= FAN_ACCESS | FAN_OPEN;
++        (*ctx)->fan_mask |= FAN_MODIFY | FAN_CLOSE | FAN_OPEN_EXEC;
+     }
+ 
+     pt_tmpdir = optget((*ctx)->clamdopts, "TemporaryDirectory");
+diff --git a/clamonacc/scan/onas_queue.c b/clamonacc/scan/onas_queue.c
+index 4b16d0080..304674b48 100644
+--- a/clamonacc/scan/onas_queue.c
++++ b/clamonacc/scan/onas_queue.c
+@@ -48,7 +48,7 @@
  #include "onas_queue.h"
  
  static void onas_scan_queue_exit(void *arg);
@@ -177,16 +202,16 @@ diff -ruN clamav-clamav-0.104.0-org/clamonacc/scan/onas_queue.c clamav-clamav-0.
  static cl_error_t onas_new_event_queue_node(struct onas_event_queue_node **node);
  static void onas_destroy_event_queue_node(struct onas_event_queue_node *node);
  
-@@ -169,7 +169,7 @@
+@@ -183,7 +183,7 @@ void *onas_scan_queue_th(void *arg)
      pthread_cleanup_push(onas_scan_queue_exit, NULL);
-     logg("*ClamScanQueue: waiting to consume events ...\n");
+     logg(LOGG_DEBUG, "ClamScanQueue: waiting to consume events ...\n");
      do {
 -        onas_consume_event(thpool);
 +        onas_consume_event(thpool, ctx);
      } while (1);
  
      pthread_cleanup_pop(1);
-@@ -185,7 +185,7 @@
+@@ -199,7 +199,7 @@ static int onas_queue_is_b_empty(void)
      return 0;
  }
  
@@ -195,7 +220,7 @@ diff -ruN clamav-clamav-0.104.0-org/clamonacc/scan/onas_queue.c clamav-clamav-0.
  {
      pthread_mutex_lock(&onas_queue_lock);
  
-@@ -198,6 +198,8 @@
+@@ -212,6 +212,8 @@ static int onas_consume_event(threadpool thpool)
      g_onas_event_queue_head->next->prev       = g_onas_event_queue_head;
      g_onas_event_queue.size--;
  
@@ -204,10 +229,11 @@ diff -ruN clamav-clamav-0.104.0-org/clamonacc/scan/onas_queue.c clamav-clamav-0.
      pthread_mutex_unlock(&onas_queue_lock);
  
      thpool_add_work(thpool, (void *)onas_scan_worker, (void *)popped_node->data);
-diff -ruN clamav-clamav-0.104.0-org/clamonacc/scan/thread.c clamav-clamav-0.104.0/clamonacc/scan/thread.c
---- clamav-clamav-0.104.0-org/clamonacc/scan/thread.c	2021-08-28 07:24:15.000000000 +0900
-+++ clamav-clamav-0.104.0/clamonacc/scan/thread.c	2021-09-29 15:20:25.458440501 +0900
-@@ -128,7 +128,7 @@
+diff --git a/clamonacc/scan/thread.c b/clamonacc/scan/thread.c
+index 62cd58b29..9aa4e4459 100644
+--- a/clamonacc/scan/thread.c
++++ b/clamonacc/scan/thread.c
+@@ -128,7 +128,7 @@ static cl_error_t onas_scan_safe(struct onas_scan_event *event_data, const char
      pthread_mutex_lock(&onas_scan_lock);
  
      ret = onas_client_scan(event_data->tcpaddr, event_data->portnum, event_data->scantype, event_data->maxstream,
@@ -216,10 +242,11 @@ diff -ruN clamav-clamav-0.104.0-org/clamonacc/scan/thread.c clamav-clamav-0.104.
  
      pthread_mutex_unlock(&onas_scan_lock);
  
-diff -ruN clamav-clamav-0.104.0-org/clamonacc/scan/thread.h clamav-clamav-0.104.0/clamonacc/scan/thread.h
---- clamav-clamav-0.104.0-org/clamonacc/scan/thread.h	2021-08-28 07:24:15.000000000 +0900
-+++ clamav-clamav-0.104.0/clamonacc/scan/thread.h	2021-09-29 15:12:56.832625980 +0900
-@@ -64,6 +64,7 @@
+diff --git a/clamonacc/scan/thread.h b/clamonacc/scan/thread.h
+index 199aeaa94..d3bf25178 100644
+--- a/clamonacc/scan/thread.h
++++ b/clamonacc/scan/thread.h
+@@ -64,6 +64,7 @@ struct onas_scan_event {
      int64_t maxstream;
      int64_t timeout;
      uint8_t bool_opts;
@@ -227,10 +254,11 @@ diff -ruN clamav-clamav-0.104.0-org/clamonacc/scan/thread.h clamav-clamav-0.104.
  } __attribute((packed));
  
  #ifdef HAVE_PRAGMA_PACK
-diff -ruN clamav-clamav-0.104.0-org/common/optparser.c clamav-clamav-0.104.0/common/optparser.c
---- clamav-clamav-0.104.0-org/common/optparser.c	2021-08-28 07:24:15.000000000 +0900
-+++ clamav-clamav-0.104.0/common/optparser.c	2021-09-29 15:12:16.523016187 +0900
-@@ -487,6 +487,8 @@
+diff --git a/common/optparser.c b/common/optparser.c
+index 219134946..496171abd 100644
+--- a/common/optparser.c
++++ b/common/optparser.c
+@@ -500,6 +500,8 @@ const struct clam_option __clam_options[] = {
  
      {"OnAccessDenyOnError", NULL, 0, CLOPT_TYPE_BOOL, MATCH_BOOL, 0, NULL, 0, OPT_CLAMD, "When using prevention, if this option is turned on, any errors that occur during scanning will result in the event attempt being denied. This could potentially lead to unwanted system behaviour with certain configurations, so the client defaults to off and allowing access events in case of error.", "yes"},
  
